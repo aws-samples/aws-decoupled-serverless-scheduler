@@ -388,7 +388,7 @@ Resources:
   Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${AWS::StackName}-drop-job-files'
+      BucketName: !Sub '${AWS::StackName}-${AWS::AccountId}-drop-job-files'
   JobInputSQS:
     Type: AWS::SQS::Queue
     Properties:
