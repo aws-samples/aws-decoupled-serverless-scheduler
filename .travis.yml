@@ -1,0 +1,38 @@
+language: python
+
+python: 
+  - "3.7"
+
+install:
+  - pip install awscli
+
+script:
+  - echo "It starts..."
+
+before_deploy:
+  - LATEST_VERSION="$(git describe --abbrev=0 --tags 2> /dev/null || echo 'v0')"
+  - NEXT_VERSION="v$((${LATEST_VERSION##*[^0-9]} + 1 ))"
+  - export VERSION=${TRAVIS_TAG:-$NEXT_VERSION}
+  - echo "Deploying version $VERSION"
+  - git archive HEAD -o $VERSION.zip
+  - if [ -z "$TRAVIS_TAG" ]; then git tag $VERSION; fi
+
+deploy:
+  - provider: releases
+    api_key: 
+      secure: fWKoF6y19eelYhD0uiKp0xm56sPceUoen8BMHFBdilhT9hJ+23b8oW3NOTQZlVsrloWINOO+aaq2kRx3MmMw3vnDcTiL8CubWIx6YVSouZ6/bF+Adf2wV36sRrWTsv54T06FaKfuyHCTVUuz9V936zJXYQhcLQYzles48xn5k+A/y+KOMA3cRbtUkeoL3CAt0DsjQxLr+DdqOP1S/5pLls2XxVD0Fed137nYC5nWSMLW2sLKUbyp6QKbOGV7oCAfS4XdcCayipnkW07L2HvJa6MEoMvhHQv/UU1gh1yPSPQIsL5QuqMQ1obyMD/mrxPXun0zWAnjVqbmPtU9Ln7oi92vrkxpESaM1yCDpWnXx6eYTdMhbRbw5I7hqObq7/99oqr0QbNRESVJ+NgAsAnlkmg/9hTnODx+hVgzrzC6zTdPpvI9uCg49g9P+Mv0YU+2EhY/8/53IKW83hO6wVbUJx+RJllu1gYWIBsXpJs/6HXnZ+7PbRHG6c3dofjmC1XXK1ZUfX0GfRi+Iihbd6lIJPozLg/3j6Xv6QXIqvvs9z1vLQ+xhVNihw2QGhRymT4QnSiVXfM4FhN5PFVFSFBGEPhaW73017bK7XSu6dfeKgJKAmhmKTW4h1nLJSPGlRIIRCVZO/rvbzRTOAkBMVqH9AbVIOyQKEy410ssLi4nDpg=
+    file: $VERSION.zip
+    skip_cleanup: true
+    on:
+      branch: master
+      condition: type != pull_request
+  - provider: script
+    script: aws s3 cp ./$VERSION.zip s3://$CFN_BUCKET/decoupled-serverless-scheduler/$VERSION/decoupled-serverless-scheduler.zip
+    skip_cleanup: true
+    on:
+      tags: true
+
+notifications:
+  email: false
+
+cache: pip
