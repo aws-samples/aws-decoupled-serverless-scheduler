@@ -728,7 +728,8 @@ Additional Points on Usage Patterns
     would identify the successful job from potentially hundreds of
     thousands pushed to SQS job queue.
 
-**Scale-out across teams and departments**
+Scale-out across teams and departments
+--------------------------------------
 
 You can deploy as many run environments as needed without increasing
 overall costs. All services used are serverless, meaning they only
