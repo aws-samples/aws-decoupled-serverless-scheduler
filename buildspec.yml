@@ -1,0 +1,18 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.7
+    commands:
+      # Upgrade AWS CLI to the latest version
+      - pip install --upgrade awscli
+  build:
+    commands:
+      # Use AWS SAM to package the application by using AWS CloudFormation
+      - export BUCKET=lambda-deployment-artifacts-123456789012
+      - aws cloudformation package --template template.yml --s3-bucket $S3_BUCKET --output-template template-export.yml
+artifacts:
+  type: zip
+  files:
+    - template-export.yml

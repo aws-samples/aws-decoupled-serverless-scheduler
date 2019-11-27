@@ -1,0 +1,6 @@
+#drop both example input file and example executable file in your S3 bucket for burst-to-cloud-ad-on job submissions
+#it is best to first create a folder named /jobs in the bucket and drop files there
+
+#your s3 trigger suffix needs to be ".sh"
+
+#ALWAYS GIVE JOB FILES A UNIQUE DIRECTORY OTHERWISE YOU CAN UPLOAD AND DOWNLOAD PREVIOUS JOBS RETRIGGERING THEM TO RUN

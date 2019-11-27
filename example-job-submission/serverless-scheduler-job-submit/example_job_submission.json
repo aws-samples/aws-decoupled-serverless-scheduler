@@ -1,0 +1,14 @@
+{
+    "job_id": "jobId_0",
+    "retry": "5",
+    "job_success_string": "",
+    "ssm_document": "AWS-RunPowerShellScript",
+    "commands":
+        [
+            "cd C:\\ProgramData\\Amazon\\SSM",
+            "Copy-S3object -Bucket my-bucket -KeyPrefix jobs/date/jobId_0 -LocalFolder .\\",
+            "C:\\ProgramData\\Amazon\\SSM\\jobId_0.bat",
+            "Remove-Item -Path C:\\ProgramData\\Amazon\\SSM\\jobId_0.bat -Force",
+            "Write-S3object -Bucket my-bucket -KeyPrefix jobs/date/jobId_0 -Folder .\\"
+        ],
+}

@@ -1,0 +1,1 @@
+copy C:\ProgramData\Amazon\SSM\example_file.input C:\ProgramData\Amazon\SSM\example_file.result

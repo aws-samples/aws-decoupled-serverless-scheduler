@@ -1,0 +1,423 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: TAG KEY
+        Parameters:
+          - TagKey
+      - Label:
+          default: DEPLOYMENT PARAMETERS
+        Parameters:
+          - TriggerSuffix
+          - AMI
+          - MaxInstancesAllowed
+          - SpotInstanceAllocationStrategy
+      - Label:
+          default: JOB PARAMETERS - CHANGE LATER VIA CONSOLE, GO TO S3Trigger LAMBDA ENVIRONMENT VARIABLES
+        Parameters:
+          - EC2WorkingDirectory
+          - CommandType
+          - Retry
+          - JobSuccessString
+    ParameterLabels:
+      TriggerSuffix:
+        Description: Label Description
+      CommandType:
+        Description: Label Description
+      Retry:
+        Description: Label Description
+      JobSuccessString:
+        Description: Label Description
+      EC2WorkingDirectory:
+        Description: Label Description
+      TagKey:
+        Description: Label Description
+      SpotInstanceAllocationStrategy:
+        Description: Label Description
+      AMI:
+        Description: Label Description
+      MaxInstancesAllowed:
+        Description: Label Description
+Parameters:
+  TriggerSuffix:
+    Description: "Description: This is the suffix of executable files uploaded to\
+      \ your S3 bucket that should trigger a new job. You can upload any number of\
+      \ input files into a unique folder directory first. Lastly also drop an executable\
+      \ in that same directory with the file type you enter below to start the job.\
+      \ All input files and the executable in that directory will be moved to EC2\
+      \ instance working directory where the executable is then run. Finally all new\
+      \ files generated from running executable are moved back down to the S3 origin\
+      \ directory.\nIMPORTANT: Make sure your job does not generate result files with\
+      \ this file type because results coming back would then trigger a new job, instead\
+      \ add steps in executable file to zip your result files or make it so that result\
+      \ files do not have this suffix. You can do this by by controlling naming of\
+      \ result files in your executable or extending the suffix below to include naming\
+      \ convention only found for input executables.\n"
+    Type: String
+    Default: .bat
+  CommandType:
+    Description: >-
+      Description: Your actual job will be in the executable file format of your choice,
+      the selecting below however is simply to orchestrate that job on an EC2 Linux
+      AMI or Windows AMI. If you are using a Linux AMI then you can select ShellScript
+      below to work with Linux operating system. If you have a Windows AMI then select
+      PowerShell below to run on Windows. When creating your own AMI with your application
+      make sure it can run either PowerShell or ShellScript for job orchestration.
+    Type: String
+    Default: PowerShell
+    AllowedValues:
+      - PowerShell
+      - ShellScript
+  Retry:
+    Description: 'Description: Specify how many times your would like jobs to be retried
+      before permanently labelled as failed. You can track retries in the DynamoDB
+      job monitoring table. '
+    Type: String
+    Default: 5
+  JobSuccessString:
+    Description: "ATTENTION: JOBS WILL FAIL IF THIS STRING IS NOT AVAILABLE IN JOB\
+      \ OUTPUT LOGS. This is any text string you expect to always see in a job output\
+      \ to be certain job has completed successfully. Recommended values if using\
+      \ CommandType PowerShell\
+      \ is copied and for\
+      \ ShellScript use upload.\
+      \ You can turn off this check by leaving just a space.\
+      \ For first time users default values are recommended."
+    Type: String
+    Default: copied
+  EC2WorkingDirectory:
+    Description: >2-
+       Description: This is the working directory you would like to use in on the
+      EC2 worker nodes launched from your own AMI. All input and executable files
+      will be moved here when a job starts and your executable needs to be able to
+      run from this directory and reference input files in the same directory. Using
+      the default directory will avoid any issues with user rights on AMI for first
+      time users.
+    Type: String
+    Default: C:\ProgramData\Amazon\SSM
+  TagKey:
+    Description: >-
+      Description: This is what associates your burst to cloud system with the serverless
+      scheduler deployed via separate CF template. The tag key below needs to match
+      the stack name of your serverless scheduler app. You can find the value in the
+      Output tab of your serverless scheduler Cloudformation stack.
+    Type: String
+    Default: my-name-for-scheduler-cloudformation-stack
+  MaxInstancesAllowed:
+    Description: "Description: Maximum number of worker nodes you would like Autoscaling to scale up.\
+      \ Autoscaling will scale\
+      \ up instances to match the number of jobs in the job queue but only to a maximum.\
+      \ Autoscaling will also\
+      \ scale workers down to 0 when there are no jobs to run."
+    Type: Number
+    Default: 500
+  SpotInstanceAllocationStrategy:
+    Description: >-
+      Description: The burst to cloud solution uses EC2 spot instances to minimise
+      your compute costs. By selecting multiple instance types in your EC2 Launch
+      Template (edit in console) that your jobs can run on, AWS Autoscaling will then
+      use different allocation strategies to pick instance types for
+      new workers. The default setting below will prioritise the lowest
+      cost instances, other options include lowest chance of a spot interruption.
+    Type: String
+    Default: lowest-price
+    AllowedValues:
+      - lowest-price
+      - capacity-optimized
+  AMI:
+    Description: >-
+      Description: This is the AMI name that EC2 Worker nodes are launched from. To run
+      jobs with the application of your choice create an AMI with your application
+      installed and make sure any license configuration needed is setup as well. The
+      default AMI below is a standard AWS Windows AMI you can use for testing
+      Windows executable scripts.
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base
+Transform:
+  - AWS::Serverless-2016-10-31
+Resources:
+  RolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: TheSystemManagerPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Action:
+              - autoscaling:Describe*
+              - cloudwatch:*
+              - logs:*
+              - sns:*
+              - iam:GetPolicy
+              - iam:GetPolicyVersion
+              - iam:GetRole
+            Effect: Allow
+            Resource: '*'
+          - Effect: Allow
+            Action: iam:CreateServiceLinkedRole
+            Resource: arn:aws:iam::*:role/aws-service-role/events.amazonaws.com/AWSServiceRoleForCloudWatchEvents*
+            Condition:
+              StringLike:
+                iam:AWSServiceName: events.amazonaws.com
+          - Effect: Allow
+            Action: s3:*
+            Resource: '*'
+          - Action:
+              - sqs:*
+            Effect: Allow
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - ssm:DescribeAssociation
+              - ssm:GetDeployablePatchSnapshotForInstance
+              - ssm:GetDocument
+              - ssm:DescribeDocument
+              - ssm:GetManifest
+              - ssm:GetParameters
+              - ssm:ListAssociations
+              - ssm:ListInstanceAssociations
+              - ssm:PutInventory
+              - ssm:PutComplianceItems
+              - ssm:PutConfigurePackageResult
+              - ssm:UpdateAssociationStatus
+              - ssm:UpdateInstanceAssociationStatus
+              - ssm:UpdateInstanceInformation
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - ssmmessages:CreateControlChannel
+              - ssmmessages:CreateDataChannel
+              - ssmmessages:OpenControlChannel
+              - ssmmessages:OpenDataChannel
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - ec2messages:AcknowledgeMessage
+              - ec2messages:DeleteMessage
+              - ec2messages:FailMessage
+              - ec2messages:GetEndpoint
+              - ec2messages:GetMessages
+              - ec2messages:SendReply
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - cloudwatch:PutMetricData
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - ec2:DescribeInstanceStatus
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - ds:CreateComputer
+              - ds:DescribeDirectories
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:DescribeLogGroups
+              - logs:DescribeLogStreams
+              - logs:PutLogEvents
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - s3:GetBucketLocation
+              - s3:PutObject
+              - s3:GetObject
+              - s3:GetEncryptionConfiguration
+              - s3:AbortMultipartUpload
+              - s3:ListMultipartUploadParts
+              - s3:ListBucket
+              - s3:ListBucketMultipartUploads
+            Resource: '*'
+      Roles:
+        - !Ref 'Role'
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-ssm-access-role'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+  InstanceProfile:
+    DependsOn:
+      - Role
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref 'Role'
+  AutoScalingGroupForLaunchTemplate:
+    DependsOn:
+      - LaunchTemplate
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AutoScalingGroupName: !Sub '${AWS::StackName}-autoscaling-group'
+      AvailabilityZones:
+        - !Select
+          - 0
+          - !GetAZs
+            Ref: AWS::Region
+        - !Select
+          - 1
+          - !GetAZs
+            Ref: AWS::Region
+      MixedInstancesPolicy:
+        InstancesDistribution:
+          OnDemandAllocationStrategy: prioritized
+          OnDemandBaseCapacity: 0
+          OnDemandPercentageAboveBaseCapacity: 0
+          SpotAllocationStrategy: !Ref 'SpotInstanceAllocationStrategy'
+          SpotInstancePools: 2
+        LaunchTemplate:
+          LaunchTemplateSpecification:
+            LaunchTemplateId: !Ref 'LaunchTemplate'
+            Version: '1'
+          Overrides:
+            - InstanceType: t2.large
+            - InstanceType: t2.medium
+            - InstanceType: t3.large
+            - InstanceType: t3.medium
+      Cooldown: '1'
+      HealthCheckGracePeriod: 60
+      HealthCheckType: EC2
+      DesiredCapacity: '0'
+      MinSize: '0'
+      MaxSize: !Ref 'MaxInstancesAllowed'
+      Tags:
+        - Key: !Ref 'TagKey'
+          Value: !Sub '${AWS::StackName}-job-queue'
+          PropagateAtLaunch: 'true'
+  LaunchTemplate:
+    DependsOn:
+      - InstanceProfile
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref 'AMI'
+        BlockDeviceMappings:
+          - DeviceName: /dev/sda1
+            Ebs:
+              VolumeSize: '100'
+        IamInstanceProfile:
+          Arn: !GetAtt 'InstanceProfile.Arn'
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: !Ref 'TagKey'
+                Value: !Sub '${AWS::StackName}-job-queue'
+      LaunchTemplateName: !Sub '${AWS::StackName}-launch-template'
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub '${AWS::StackName}-lambda-role'
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonEC2FullAccess
+        - arn:aws:iam::aws:policy/AmazonSQSFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonSSMFullAccess
+        - arn:aws:iam::aws:policy/AmazonSNSFullAccess
+        - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+  EC2Scale:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/ec2_scale
+      Handler: index.handler
+      Runtime: python3.6
+      MemorySize: 512
+      Timeout: 100
+      Role: !GetAtt 'LambdaRole.Arn'
+      Events:
+        PollSQSInterval:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 minute)
+      Environment:
+        Variables:
+          SQSINPUTNAME: !Sub '${AWS::StackName}-job-queue'
+          AUTOSCALINGGROUP: !Sub '${AWS::StackName}-autoscaling-group'
+  S3Trigger:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ./src/s3_trigger
+      Handler: index.handler
+      Runtime: python3.6
+      MemorySize: 512
+      Timeout: 100
+      Role: !GetAtt 'LambdaRole.Arn'
+      Events:
+        BucketEvent1:
+          Type: S3
+          Properties:
+            Bucket: !Ref 'Bucket'
+            Events:
+              - s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: !Sub '${TriggerSuffix}'
+      Environment:
+        Variables:
+          SQSINPUTNAME: !Sub '${AWS::StackName}-job-queue'
+          COMMANDTYPE: !Sub '${CommandType}'
+          RETRY: !Sub '${Retry}'
+          JOBSUCCESSSTRING: !Sub '${JobSuccessString}'
+          EC2WORKINGDIRECTORY: !Sub '${EC2WorkingDirectory}'
+  Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub '${AWS::StackName}-drop-job-files'
+  JobInputSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub '${AWS::StackName}-job-queue'
+  JobOutputSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub '${AWS::StackName}-job-queue-finished'
+  JobFailedSQS:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: !Sub '${AWS::StackName}-job-queue-failed'
+
+Outputs:
+  S3Bucket:
+    Description: "The name of the S3 bucket where you can start submitting jobs, (use unique folders for each set of job input files)"
+    Value: !Ref 'Bucket'
+  SQSFinishedQueue:
+    Description: "The queue where successful jobs land"
+    Value: !Ref 'JobOutputSQS'
+  SQSFailedQueue:
+    Description: "The queue where failed jobs land"
+    Value: !Ref 'JobFailedSQS'
+  AutoScalingGroup:
+    Description: "The name of the Autoscaling Group where you can change EC2 Worker configuration such as instance types to use and AMI ID"
+    Value: !Ref 'AutoScalingGroupForLaunchTemplate'
+  LambdaS3Trigger:
+    Description: "For advanced users you can change the job orchestration commands in this Lambda"
+    Value: !Ref 'S3Trigger'
+  LambdaEC2Scale:
+    Description: "For advanced users you can change how EC2 workers are scalled up and down in this Lambda"
+    Value: !Ref 'EC2Scale'
