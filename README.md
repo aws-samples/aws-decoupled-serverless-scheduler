@@ -57,7 +57,7 @@ Architecture:
 Serverless Schduler. Part 2 builds out the resource allocation
 architecture.](./media/image1.png "Figure 1: Serverless Scheduler Reference Architecture ")
 
-![](./media/image2.tiff)
+![](./media/image2.png)
 
 Figure 1: Serverless Scheduler Reference Architecture (grayed-out area
 is covered in Part 2).
