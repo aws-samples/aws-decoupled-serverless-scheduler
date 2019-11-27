@@ -1,6 +1,4 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2 - Resource Management (uksb-1q7ff1e21)
-
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -16,7 +14,8 @@ Metadata:
           - MaxInstancesAllowed
           - SpotInstanceAllocationStrategy
       - Label:
-          default: JOB PARAMETERS - CHANGE LATER VIA CONSOLE, GO TO S3Trigger LAMBDA ENVIRONMENT VARIABLES
+          default: JOB PARAMETERS - CHANGE LATER VIA CONSOLE, GO TO S3Trigger LAMBDA
+            ENVIRONMENT VARIABLES
         Parameters:
           - EC2WorkingDirectory
           - CommandType
@@ -78,24 +77,21 @@ Parameters:
     Type: String
     Default: 5
   JobSuccessString:
-    Description: "ATTENTION: JOBS WILL FAIL IF THIS STRING IS NOT AVAILABLE IN JOB\
-      \ OUTPUT LOGS. This is any text string you expect to always see in a job output\
-      \ to be certain job has completed successfully. Recommended values if using\
-      \ CommandType PowerShell\
-      \ is copied and for\
-      \ ShellScript use upload.\
-      \ You can turn off this check by leaving just a space.\
-      \ For first time users default values are recommended."
+    Description: >-
+      ATTENTION: JOBS WILL FAIL IF THIS STRING IS NOT AVAILABLE IN JOB OUTPUT LOGS.
+      This is any text string you expect to always see in a job output to be certain
+      job has completed successfully. Recommended values if using CommandType PowerShell
+      is copied and for ShellScript use upload. You can turn off this check by leaving
+      just a space. For first time users default values are recommended.
     Type: String
     Default: copied
   EC2WorkingDirectory:
-    Description: >2-
-       Description: This is the working directory you would like to use in on the
-      EC2 worker nodes launched from your own AMI. All input and executable files
-      will be moved here when a job starts and your executable needs to be able to
-      run from this directory and reference input files in the same directory. Using
-      the default directory will avoid any issues with user rights on AMI for first
-      time users.
+    Description: " Description: This is the working directory you would like to use\
+      \ in on the\nEC2 worker nodes launched from your own AMI. All input and executable\
+      \ files will be moved here when a job starts and your executable needs to be\
+      \ able to run from this directory and reference input files in the same directory.\
+      \ Using the default directory will avoid any issues with user rights on AMI\
+      \ for first time users."
     Type: String
     Default: C:\ProgramData\Amazon\SSM
   TagKey:
@@ -107,11 +103,11 @@ Parameters:
     Type: String
     Default: my-name-for-scheduler-cloudformation-stack
   MaxInstancesAllowed:
-    Description: "Description: Maximum number of worker nodes you would like Autoscaling to scale up.\
-      \ Autoscaling will scale\
-      \ up instances to match the number of jobs in the job queue but only to a maximum.\
-      \ Autoscaling will also\
-      \ scale workers down to 0 when there are no jobs to run."
+    Description: >-
+      Description: Maximum number of worker nodes you would like Autoscaling to scale
+      up. Autoscaling will scale up instances to match the number of jobs in the job
+      queue but only to a maximum. Autoscaling will also scale workers down to 0 when
+      there are no jobs to run.
     Type: Number
     Default: 500
   SpotInstanceAllocationStrategy:
@@ -119,9 +115,9 @@ Parameters:
       Description: The burst to cloud solution uses EC2 spot instances to minimise
       your compute costs. By selecting multiple instance types in your EC2 Launch
       Template (edit in console) that your jobs can run on, AWS Autoscaling will then
-      use different allocation strategies to pick instance types for
-      new workers. The default setting below will prioritise the lowest
-      cost instances, other options include lowest chance of a spot interruption.
+      use different allocation strategies to pick instance types for new workers.
+      The default setting below will prioritise the lowest cost instances, other options
+      include lowest chance of a spot interruption.
     Type: String
     Default: lowest-price
     AllowedValues:
@@ -129,11 +125,11 @@ Parameters:
       - capacity-optimized
   AMI:
     Description: >-
-      Description: This is the AMI name that EC2 Worker nodes are launched from. To run
-      jobs with the application of your choice create an AMI with your application
+      Description: This is the AMI name that EC2 Worker nodes are launched from. To
+      run jobs with the application of your choice create an AMI with your application
       installed and make sure any license configuration needed is setup as well. The
-      default AMI below is a standard AWS Windows AMI you can use for testing
-      Windows executable scripts.
+      default AMI below is a standard AWS Windows AMI you can use for testing Windows
+      executable scripts.
     Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
     Default: /aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base
 Transform:
@@ -341,6 +337,27 @@ Resources:
         - arn:aws:iam::aws:policy/AmazonSNSFullAccess
         - arn:aws:iam::aws:policy/AWSStepFunctionsFullAccess
         - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+  TimeStampFunction:
+    DependsOn:
+      - LambdaRole
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        ZipFile: !Join
+          - "\n"
+          - - import json
+            - import time
+            - import cfnresponse
+            - 'def handler(event, context):'
+            - '   responseData = {}'
+            - '   timestamp = ''-''.join(str(time.time()).split(''.''))'
+            - '   cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData,
+              timestamp)'
+      Handler: index.handler
+      Runtime: python3.6
+      MemorySize: 512
+      Timeout: 100
+      Role: !GetAtt 'LambdaRole.Arn'
   EC2Scale:
     Type: AWS::Serverless::Function
     Properties:
@@ -387,10 +404,16 @@ Resources:
           RETRY: !Sub '${Retry}'
           JOBSUCCESSSTRING: !Sub '${JobSuccessString}'
           EC2WORKINGDIRECTORY: !Sub '${EC2WorkingDirectory}'
+  Timestamp:
+    Type: Custom::Value
+    Properties:
+      ServiceToken: !GetAtt 'TimeStampFunction.Arn'
   Bucket:
+    DependsOn:
+      - Timestamp
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub '${AWS::StackName}-${AWS::AccountId}-drop-job-files'
+      BucketName: !Sub '${AWS::StackName}-${Timestamp}-drop-job-files'
   JobInputSQS:
     Type: AWS::SQS::Queue
     Properties:
@@ -403,23 +426,26 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Sub '${AWS::StackName}-job-queue-failed'
-
 Outputs:
   S3Bucket:
-    Description: "The name of the S3 bucket where you can start submitting jobs, (use unique folders for each set of job input files)"
+    Description: The name of the S3 bucket where you can start submitting jobs, (use
+      unique folders for each set of job input files)
     Value: !Ref 'Bucket'
   SQSFinishedQueue:
-    Description: "The queue where successful jobs land"
+    Description: The queue where successful jobs land
     Value: !Ref 'JobOutputSQS'
   SQSFailedQueue:
-    Description: "The queue where failed jobs land"
+    Description: The queue where failed jobs land
     Value: !Ref 'JobFailedSQS'
   AutoScalingGroup:
-    Description: "The name of the Autoscaling Group where you can change EC2 Worker configuration such as instance types to use and AMI ID"
+    Description: The name of the Autoscaling Group where you can change EC2 Worker
+      configuration such as instance types to use and AMI ID
     Value: !Ref 'AutoScalingGroupForLaunchTemplate'
   LambdaS3Trigger:
-    Description: "For advanced users you can change the job orchestration commands in this Lambda"
+    Description: For advanced users you can change the job orchestration commands
+      in this Lambda
     Value: !Ref 'S3Trigger'
   LambdaEC2Scale:
-    Description: "For advanced users you can change how EC2 workers are scalled up and down in this Lambda"
+    Description: For advanced users you can change how EC2 workers are scalled up
+      and down in this Lambda
     Value: !Ref 'EC2Scale'
