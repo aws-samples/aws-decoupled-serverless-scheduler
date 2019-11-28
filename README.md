@@ -1,5 +1,5 @@
-You can click links below to deploy Part 1 & 2 of the solution
-==============================================================
+Please refer to Deployment section below for full instructions on deploying & testing
+=====================================================================================
 
 <!DOCTYPE html>
 <html lang="en">
