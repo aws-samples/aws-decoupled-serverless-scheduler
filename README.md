@@ -1,3 +1,244 @@
+You can click links below to deploy Part 1 & 2 of the solution
+==============================================================
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  </head>
+  <body>
+    <table>
+      <tr>
+        <th>Region</th>
+        <th>serverless-scheduler-app.template</th>
+        <th>resource-management.template</th>
+      </tr>
+      <tr>
+        <th>eu-north-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-eu-north-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-north-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-eu-north-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-south-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-south-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-south-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-south-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>eu-west-3</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-3/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-3#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-3/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>eu-west-2</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-2/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-2#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-2/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>eu-west-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-west-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-eu-west-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-northeast-3</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-3#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-3/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-3#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-3/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-northeast-2</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-2/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-2#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-2/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-northeast-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-northeast-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-northeast-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>sa-east-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-sa-east-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=sa-east-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-sa-east-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ca-central-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ca-central-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ca-central-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ca-central-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-southeast-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-southeast-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-southeast-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>ap-southeast-2</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-ap-southeast-2/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=ap-southeast-2#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-ap-southeast-2/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>eu-central-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-eu-central-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=eu-central-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-eu-central-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>us-east-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-us-east-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-us-east-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>us-east-2</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-us-east-2/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-east-2#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-us-east-2/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>us-west-1</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-us-west-1/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-1#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-us-west-1/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <th>us-west-2</th>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=serverless-scheduler-app&templateURL=https://s3.amazonaws.com/solution-builders-us-west-2/decoupled-serverless-scheduler/latest/serverless-scheduler-app.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+        <td>
+          <a href="https://console.aws.amazon.com/cloudformation/home?region=us-west-2#/stacks/new?stackName=resource-management&templateURL=https://s3.amazonaws.com/solution-builders-us-west-2/decoupled-serverless-scheduler/latest/resource-management.template">
+            <img alt="Launch Stack" src="https://raw.githubusercontent.com/aws-samples/aws-remote-desktop-for-eda/master/images/Launch_on_AWS.png" width="120" />
+          </a>
+        </td>
+      </tr>
+    </table>
+    <p class="footer">Generated by cfn-publish on Wed Nov 27 16:42:56 UTC 2019</p>
+  </body>
+</html>
+
+
 Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2
 ======================================================================
 
