@@ -10,6 +10,8 @@ script:
   - echo "It starts..."
 
 before_deploy:
+  - mkdir -p ~/.aws
+  - cat >> ~/.aws/config <<<"[profile publisher]"$'\n'"credential_source=Environment"$'\n'"role_arn=${ROLE_ARN}"$'\n'"duration_seconds=900"
   - LATEST_VERSION="$(git describe --abbrev=0 --tags 2> /dev/null || echo 'v0')"
   - NEXT_VERSION="v$((${LATEST_VERSION##*[^0-9]} + 1 ))"
   - export VERSION=${TRAVIS_TAG:-$NEXT_VERSION}
@@ -27,7 +29,7 @@ deploy:
       branch: master
       condition: type != pull_request
   - provider: script
-    script: aws s3 cp ./$VERSION.zip s3://$CFN_BUCKET/decoupled-serverless-scheduler/$VERSION/decoupled-serverless-scheduler.zip
+    script: aws s3 --profile publisher cp ./$VERSION.zip s3://$CFN_BUCKET/decoupled-serverless-scheduler/$VERSION/decoupled-serverless-scheduler.zip
     skip_cleanup: true
     on:
       tags: true
