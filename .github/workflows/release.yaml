@@ -30,7 +30,6 @@ jobs:
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
-        if: env.THIS_VERSION_COMPARABLE > env.LATEST_VERSION_COMPARABLE
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
