@@ -1,0 +1,42 @@
+---
+
+name: Release Version
+on:
+  push:
+    branches:
+      - master
+jobs:
+  release:
+    if: "! contains(toJSON(github.event.commits), '[skip release]')"
+    name: Release Version
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/* || true
+      # Setup
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.7
+      - name: Install python dependencies
+        run: pip3 install awscli
+      # Release if required
+      - name: Set latest version in env variables
+        id: latest-version
+        run: echo "LATEST_VERSION=$(git describe --tags $(git rev-list --tags --max-count=1) | sed s/^v// 2> /dev/null || echo '0')" >> $GITHUB_ENV
+      - name: Set new version in env variables
+        id: this-version
+        run: echo "THIS_VERSION=$((${LATEST_VERSION##*[^0-9]} + 1 ))" >> $GITHUB_ENV
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        if: env.THIS_VERSION_COMPARABLE > env.LATEST_VERSION_COMPARABLE
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        with:
+          tag_name: v${{ env.THIS_VERSION }}
+          release_name: Release v${{ env.THIS_VERSION }}
+          body: |
+            See the commits for a list of features included in this release
+          draft: false
+          prerelease: false
