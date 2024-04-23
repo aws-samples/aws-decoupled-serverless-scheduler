@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2 - Serverless Scheduler (uksb-1q7ff025u)
+Description: Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2 - Serverless Scheduler (uksb-1q7ff1e21) (tag:serverless-scheduler)
 
 Transform:
   - "AWS::Serverless-2016-10-31"
