@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2 - Resource Management (uksb-1q7ff1e21)
+Description: Decoupled Serverless Scheduler To Run HPC Applications At Scale on EC2 - Resource Management (uksb-1q7ff1e21) (tag:resource-management)
 
 Metadata:
   AWS::CloudFormation::Interface:
