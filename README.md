@@ -1,3 +1,8 @@
+No longer supported. New and Improved aws-cyclone-solution available here:
+==========================================================================
+https://github.com/awslabs/aws-cyclone-solution
+
+
 Please refer to Deployment section below for full instructions on deploying & testing
 =====================================================================================
 
